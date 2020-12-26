@@ -9,11 +9,11 @@ app.use(cors())
 
 const PORT = process.env.PORT || 4000
 
-// app.get('/index', (req, res) => {
-//   res.json({
-//     message: 'OK'
-//   })
-// })
+app.get('/index', (req, res) => {
+  res.json({
+    message: 'OK'
+  })
+})
 
 // app.get('*', (req, res) => {
 //   res.json({

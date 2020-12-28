@@ -9,9 +9,9 @@ app.use(cors())
 
 const PORT = process.env.PORT || 4000
 
-app.get('/index', (req, res) => {
+app.get('/', (req, res) => {
   res.json({
-    message: 'OK'
+    message: 'server is OK!!'
   })
 })
 
@@ -31,7 +31,7 @@ mongoose.connect(process.env.MONGO_CONNECTION_STRING, {
 },
 (err) => {
   if(err) throw err;
-  console.log("connention established");
+  console.log("connentioning MongoDB cloud");
 })
 
 

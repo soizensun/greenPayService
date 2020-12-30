@@ -20,4 +20,8 @@ router.get("/get/:id", UserController.findById)
 
 router.get("/", UserController.getAll)
 
+router.get("/loginUser", auth, UserController.loginUser)
+
+router.post('/googleLogin', UserController.googleLogin)
+
 module.exports = router

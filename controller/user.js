@@ -138,14 +138,13 @@ exports.loginUser = async (req, res) => {
 }
 
 exports.googleLogin = async (req, res) => {
+    console.log("POST googleLogin");
     const { tokenId } = req.body
     let clientRes = await client.verifyIdToken({ idToken: tokenId, audience: process.env.GOOGLE_CLIENT_ID })
     const { email_verified, name, email } = await clientRes.payload
 
     if (email_verified) {
         const user = await User.findOne({ email })
-        console.log(user);
-
         //login
         if (user) {
             const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' })
@@ -172,6 +171,7 @@ exports.googleLogin = async (req, res) => {
             });
             const savedUser = await newUser.save();
             const thisUser = await User.findOne({ email })
+
             // login
             const token = jwt.sign({ id: thisUser._id }, process.env.JWT_SECRET, { expiresIn: '7d' })
 

@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 
-const userShema = new mongoose.Schema({
+const shopShema = new mongoose.Schema({
+    ownerId: {type: String, required: true},
     name: {type: String, required: true},
-    tag: {type: [String], required: true},
+    tag: {type: String, required: true},
     description: {type: String, required: true},
-    logo: {type: String},
-    ownerId: {type: String, required: true}
+    logo: {type: String}
 })
 
-module.exports = User = mongoose.model("shop", userShema); 
+module.exports = Shop = mongoose.model("shop", shopShema); 

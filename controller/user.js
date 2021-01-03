@@ -1,6 +1,9 @@
 const bcrypt = require("bcryptjs");
 const User = require('../models/User')
 const jwt = require('jsonwebtoken')
+const { OAuth2Client } = require('google-auth-library')
+
+const client = new OAuth2Client("1068628232562-qm0ssc22ls4ks62jcopg1frqbdau8jau.apps.googleusercontent.com")
 
 exports.getAll = async (req, res) => {
     try {
@@ -76,7 +79,7 @@ exports.login = async (req, res) => {
                 .status(400)
                 .json({ msg: "Invalid credentials" })
 
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET)
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' })
         res.json({
             token,
             user: {
@@ -127,4 +130,60 @@ exports.findById = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: error.message })
     }
+}
+
+exports.loginUser = async (req, res) => {
+    const user = await User.findById(req.user)
+    res.json(user)
+}
+
+exports.googleLogin = async (req, res) => {
+    console.log("POST googleLogin");
+    const { tokenId } = req.body
+    let clientRes = await client.verifyIdToken({ idToken: tokenId, audience: process.env.GOOGLE_CLIENT_ID })
+    const { email_verified, name, email } = await clientRes.payload
+
+    if (email_verified) {
+        const user = await User.findOne({ email })
+        //login
+        if (user) {
+            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' })
+            res.json({
+                token,
+                user: {
+                    id: user.id,
+                    displayName: user.displayName,
+                    email: user.email
+                }
+            })
+        }
+        // register new user and login 
+        else {
+            // register
+            let password = email + process.env.JWT_SECRET
+            const salt = await bcrypt.genSalt();
+            const passwordHash = await bcrypt.hash(password, salt);
+
+            const newUser = new User({
+                email,
+                password: passwordHash,
+                displayName: name,
+            });
+            const savedUser = await newUser.save();
+            const thisUser = await User.findOne({ email })
+
+            // login
+            const token = jwt.sign({ id: thisUser._id }, process.env.JWT_SECRET, { expiresIn: '7d' })
+
+            res.json({
+                token,
+                user: {
+                    id: thisUser.id,
+                    displayName: thisUser.displayName,
+                    email: thisUser.email
+                }
+            })
+        }
+    }
+
 }

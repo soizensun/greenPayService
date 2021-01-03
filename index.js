@@ -15,11 +15,11 @@ app.get('/', (req, res) => {
   })
 })
 
-// app.get('*', (req, res) => {
-//   res.json({
-//     message: 'WoW'
-//   })
-// })
+app.use('/users', require('./routes/userRouter'))
+
+app.use('/shops', require('./routes/shopRouter'))
+
+app.use('/products', require('./routes/productRouter'))
 
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`)
@@ -33,6 +33,3 @@ mongoose.connect(process.env.MONGO_CONNECTION_STRING, {
   if(err) throw err;
   console.log("connentioning MongoDB cloud");
 })
-
-
-app.use('/users', require('./routes/userRouter'))

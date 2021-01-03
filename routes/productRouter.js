@@ -11,7 +11,7 @@ router.get('/test', (req, res) => {
 
 router.post('/register', ProductController.register)
 
-router.post('/getShop/:id', ProductController.getShop)
+router.get('/getShop/:id', ProductController.getShop)
 
 router.delete('/delete/:id', ProductController.delete)
 

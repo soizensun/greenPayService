@@ -16,7 +16,7 @@ router.delete("/delete", auth, UserController.delete)
 
 router.post("/tokenIsValid", UserController.tokenIsValid)
 
-router.get("/get/:id", UserController.findById)
+router.get("/getUser/:id", UserController.findById)
 
 router.get("/", UserController.getAll)
 

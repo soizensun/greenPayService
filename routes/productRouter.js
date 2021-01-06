@@ -7,13 +7,15 @@ router.get('/test', (req, res) => {
     res.send("Hello, it is route product")
 })
 
-// router.get('/', ProductController.getAll)
+router.get('/', ProductController.getAll)
 
 router.post('/register', ProductController.register)
 
-router.post('/getShop/:id', ProductController.getShop)
+router.get('/getShop/:id', ProductController.getShop)
 
 router.delete('/delete/:id', ProductController.delete)
+
+router.get('/:id', ProductController.getOne)
 
 
 

@@ -1,13 +1,20 @@
 const Product = require('../models/Product');
 const Shop = require('../models/Shop');
 
-
+exports.getAll = async (req, res) => {
+    try {
+        const all = await Product.find()
+        return res.json(all)
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+}
 
 exports.register = async (req, res) => {
     try {
-        let { shopId, name, tag, description, mainPicture, morePicture } = req.body
+        let { shopId, name, tag, price, stock, description, mainPicture, morePicture } = req.body
 
-        if (!shopId || !name || !tag || !description)
+        if (!shopId || !name || !tag || !description || !price || !stock)
             return res
                 .status(400)
                 .json({ msg: "Not all fields have been entered." })
@@ -17,6 +24,8 @@ exports.register = async (req, res) => {
             shopId,
             name,
             tag,
+            price,
+            stock,
             description,
             mainPicture,
             morePicture
@@ -45,6 +54,16 @@ exports.delete = async (req, res) => {
         const product = await Product.findById( req.params.id )
         const deletedProduct = await Product.findByIdAndDelete(product)
         res.json(deletedProduct)
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+}
+
+exports.getOne = async (req, res) => {
+    try {
+        const product = await Product.findById( req.params.id )
+
+        res.json(product)
     } catch (error) {
         res.status(500).json({ error: error.message })
     }

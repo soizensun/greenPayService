@@ -19,6 +19,16 @@ exports.register = async (req, res) => {
                 .status(400)
                 .json({ msg: "Not all fields have been entered." })
 
+        const tmpProduct = await Product.findOne({ name, shopId })
+        console.log(tmpProduct);
+        if (tmpProduct) {
+            if (tmpProduct.shopId == shopId)
+                return res
+                    .status(400)
+                    .json({ msg: "Duplocate produte in shop" })
+        }
+
+
 
         const newProduct = new Product({
             shopId,
@@ -41,8 +51,8 @@ exports.register = async (req, res) => {
 
 exports.getShop = async (req, res) => {
     try {
-        const product = await Product.findById( req.params.id )
-        const shop = await Shop.findById({_id: product.shopId})
+        const product = await Product.findById(req.params.id)
+        const shop = await Shop.findById({ _id: product.shopId })
 
         res.json(shop)
     } catch (error) {
@@ -52,7 +62,7 @@ exports.getShop = async (req, res) => {
 
 exports.delete = async (req, res) => {
     try {
-        const product = await Product.findById( req.params.id )
+        const product = await Product.findById(req.params.id)
         const deletedProduct = await Product.findByIdAndDelete(product)
         res.json(deletedProduct)
     } catch (error) {
@@ -62,7 +72,7 @@ exports.delete = async (req, res) => {
 
 exports.getOne = async (req, res) => {
     try {
-        const product = await Product.findById( req.params.id )
+        const product = await Product.findById(req.params.id)
 
         res.json(product)
     } catch (error) {

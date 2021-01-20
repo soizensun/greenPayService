@@ -12,9 +12,9 @@ exports.getAll = async (req, res) => {
 
 exports.register = async (req, res) => {
     try {
-        let { name, tagId, description, logo, ownerId } = req.body
+        let { name, tagId, description, logo, ownerId, shipping } = req.body
 
-        if (!name || !tagId || !description || !logo || !ownerId)
+        if (!name || !tagId || !description || !ownerId || !shipping)
             return res
                 .status(400)
                 .json({ msg: "Not all fields have been entered." })
@@ -30,7 +30,8 @@ exports.register = async (req, res) => {
             tagId,
             description,
             logo,
-            ownerId
+            ownerId,
+            shipping
         });
         const savedShop = await newShop.save();
         res.json(savedShop);

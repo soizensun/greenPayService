@@ -21,7 +21,7 @@ app.use('/shops', require('./routes/shopRouter'))
 
 app.use('/products', require('./routes/productRouter'))
 
-app.use('/carts', require('./routes/cart'))
+app.use('/carts', require('./routes/cartRouter'))
 
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`)

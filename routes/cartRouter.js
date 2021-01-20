@@ -1,4 +1,4 @@
-const { route } = require("./userRouter")
+const auth = require('../middleware/auth')
 const CartController = require ('../controller/cart')
 
 const router = require("express").Router()
@@ -9,8 +9,11 @@ router.get('/test', (req, res) => {
 
 router.get('/', CartController.getAll)
 
-router.post('/addProduct', CartController.addProduct)
+router.post('/addProductForDev', CartController.addProductForDev)
 
 router.get('/:userId', CartController.getOne)
+
+router.post('/addAProduct', auth, CartController.addAProduct)
+
 
 module.exports = router

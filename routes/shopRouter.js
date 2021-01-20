@@ -11,6 +11,8 @@ router.get('/', ShopController.getAll)
 
 router.post('/register', ShopController.register)
 
+router.get('/:id', ShopController.findById)
+
 // router.get('/')
 
 module.exports = router

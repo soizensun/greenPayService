@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const User = require('../models/User')
+const Address = require('../models/Address')
 const jwt = require('jsonwebtoken')
 const { OAuth2Client } = require('google-auth-library')
 
@@ -184,5 +185,59 @@ exports.googleLogin = async (req, res) => {
             })
         }
     }
-
 }
+
+exports.addAddress = async (req, res) => {
+    try {
+        let {
+            recipientName,
+            recipientSirName,
+            phoneNumber,
+            houseNumber,
+            moo,
+            road,
+            subDistrict,
+            district,
+            province,
+            postCode
+        } = req.body
+
+
+        if (!recipientName || !recipientSirName || !phoneNumber || !houseNumber || !district || !province || !postCode)
+            return res
+                .status(400)
+                .json({ msg: "Not all importance fields have been entered." })
+
+        const newAddress = new Address({
+            recipientName,
+            recipientSirName,
+            phoneNumber,
+            houseNumber,
+            moo,
+            road,
+            subDistrict,
+            district,
+            province,
+            postCode
+        });
+        const savedAddress = await newAddress.save();
+
+        await User.findOneAndUpdate({ _id: req.user }, { addressId: savedAddress._id })
+        const updatedUser = await User.findOne({ _id: req.user })
+        res.json(updatedUser)
+
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+}
+
+exports.getAddress = async (req, res) => {
+    try {
+        const user = await User.findOne({ _id: req.user })
+        const address = await Address.findById(user.addressId)
+        res.json(address)
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+}
+

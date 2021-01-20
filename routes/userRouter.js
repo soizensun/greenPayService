@@ -24,4 +24,8 @@ router.get("/loginUser", auth, UserController.loginUser)
 
 router.post('/googleLogin', UserController.googleLogin)
 
+router.post('/addAddress', auth,  UserController.addAddress)
+
+router.get('/getAddress', auth,  UserController.getAddress)
+
 module.exports = router

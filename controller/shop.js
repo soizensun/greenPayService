@@ -44,7 +44,6 @@ exports.register = async (req, res) => {
 exports.findById = async (req, res) => {
     try {
         const shop = await Shop.findById(req.params.id)
-
         res.json(shop)
     } catch (error) {
         res.status(500).json({ error: error.message })

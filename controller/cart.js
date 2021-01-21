@@ -57,9 +57,6 @@ exports.getOne = async (req, res) => {
 exports.addAProduct = async (req, res) => {
     try {
         const { productId, amount } = req.body
-        // console.log(userId);
-        // console.log(productId);
-        // console.log(amount);
         const user = await User.findById(req.user)
 
         let tmpObject = {}

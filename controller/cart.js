@@ -1,5 +1,6 @@
 const Cart = require('../models/Cart');
-const User = require('../models/User');
+const Project = require('../models/Project')
+const Order = require('../models/Order')
 
 exports.getAll = async (req, res) => {
     try {
@@ -57,7 +58,7 @@ exports.getOne = async (req, res) => {
 exports.addAProduct = async (req, res) => {
     try {
         const { productId, amount } = req.body
-        const user = await User.findById(req.user)
+        // const user = await User.findById(req.user)
 
         let tmpObject = {}
 
@@ -68,10 +69,10 @@ exports.addAProduct = async (req, res) => {
         tmpObject.shopId = shop._id
         tmpObject.amount = amount
 
-        const cart = await Cart.findOne({ userId: user._id })
+        const cart = await Cart.findOne({ userId: req.user })
         if (cart) {
             let isAdd = false
-            const cart1 = await Cart.findOne({ userId: user._id })
+            const cart1 = await Cart.findOne({ userId: req.user })
 
             let cloneArray = [...cart.product]
 
@@ -87,7 +88,7 @@ exports.addAProduct = async (req, res) => {
                 cloneArray.push(tmpObject)
             }
 
-            const ovewrited = await cart1.overwrite({ userId : user._id, product: cloneArray })
+            const ovewrited = await cart1.overwrite({ userId: req.user, product: cloneArray })
             const updatedCart = await ovewrited.save();
 
             return res.json(updatedCart)
@@ -95,7 +96,7 @@ exports.addAProduct = async (req, res) => {
         else {
 
             const newUserCart = new Cart({
-                userId: user._id,
+                userId: req.user,
                 product: [tmpObject]
             });
 
@@ -106,4 +107,50 @@ exports.addAProduct = async (req, res) => {
         res.status(500).json({ error: error.message })
     }
 
+}
+
+
+exports.confirmCart = async (req, res) => {
+
+    try {
+        let { projectId, budget } = req.body
+
+        // add budget to project
+        let project = await Project.findById(projectId)
+        let newBudget = budget + project.budget
+
+        let updatedProject = await Project.updateOne({ _id: projectId }, { budget: newBudget })
+
+        // get cart and add to Order
+        let userCart = await Cart.findOne({ userId: req.user })
+        let shopList = []
+
+        userCart.product.map(product => {
+            if (!shopList.includes(product.shopId.toString())) {
+                shopList.push(product.shopId.toString())
+            }
+        })
+
+        let tmpObj = {}
+        shopList.map(async shop => {
+            let tmpArray = []
+            userCart.product.map(async product => {
+                if (product.shopId.toString() == shop) tmpArray.push(product)
+            })
+            tmpObj.products = tmpArray
+            tmpObj.shopId = shop
+            tmpObj.userId = req.user
+
+            const newOrder = new Order(tmpObj);
+            const savedOrder = await newOrder.save();
+        })
+
+        // delete cart
+        const deletedCart = await Cart.findByIdAndDelete(userCart._id)
+        res.json(deletedCart)
+
+
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
 }

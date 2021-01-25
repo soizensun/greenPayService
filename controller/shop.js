@@ -1,5 +1,7 @@
 const Shop = require('../models/Shop')
-
+const Order = require('../models/Order')
+const Product = require('../models/Product')
+const e = require('express')
 
 exports.getAll = async (req, res) => {
     try {
@@ -49,3 +51,37 @@ exports.findById = async (req, res) => {
         res.status(500).json({ error: error.message })
     }
 }
+
+exports.getOrder = async (req, res) => {
+    try {
+        const orderList = await Order.find({ shopId: req.params.shopId })
+        res.json(orderList)
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+}
+
+exports.closeOrder = async (req, res) => {
+    try {
+        const order = await Order.findById(req.params.orderId)
+
+        order.products.map(async product => {
+            const productDetail = await Product.findById(product.productId)
+
+            if (product.amount <= productDetail.stock) {
+                const newProduct = await Product.update(
+                    { _id: productDetail._id },
+                    {
+                        $set: { stock: productDetail.stock - product.amount }
+                    })
+            }
+
+        })
+
+        const deletedOrder = await Order.findByIdAndDelete(req.params.orderId)
+        res.json(deletedOrder)
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+}
+

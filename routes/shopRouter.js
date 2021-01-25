@@ -1,7 +1,7 @@
-const { route } = require("./userRouter")
-const ShopController = require ('../controller/shop')
-
 const router = require("express").Router()
+const ShopController = require ('../controller/shop')
+const auth = require('../middleware/auth')
+
 
 router.get('/test', (req, res) => {
     res.send("Hello, it is route shop")
@@ -13,6 +13,9 @@ router.post('/register', ShopController.register)
 
 router.get('/:id', ShopController.findById)
 
-// router.get('/')
+router.get('/getOrder/:shopId', ShopController.getOrder)
+
+router.get('/closeOrder/:orderId', ShopController.closeOrder)
+
 
 module.exports = router

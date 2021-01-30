@@ -75,13 +75,22 @@ exports.closeOrder = async (req, res) => {
                         $set: { stock: productDetail.stock - product.amount }
                     })
             }
-
         })
 
-        const deletedOrder = await Order.findByIdAndDelete(req.params.orderId)
-        res.json(deletedOrder)
+        await Order.findByIdAndDelete(req.params.orderId)
+
+        const orderList = await Order.find({ shopId: order.shopId })
+        res.json(orderList)
     } catch (error) {
         res.status(500).json({ error: error.message })
     }
 }
 
+exports.MyProducts = async (req, res) => {
+    try {
+        const productList = await Product.find({ shopId: req.params.shopId })
+        res.json(productList.reverse())
+    } catch (error) {
+        res.status(500).json({ error: error.message })        
+    }
+}

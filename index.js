@@ -27,6 +27,8 @@ app.use('/projects', require('./routes/projectRouter'))
 
 app.use('/addresses', require('./routes/addressRouter'))
 
+app.use('/productTag', require('./routes/productTagRouter'))
+
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`)
 })

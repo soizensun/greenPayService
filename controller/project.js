@@ -44,7 +44,7 @@ exports.weeklyProject = async (req, res) => {
 
 exports.getAll = async (req, res) => {
     try {
-        const allProject = await Project.find({ isWeeklyProject: false })
+        const allProject = await Project.find()
         return res.json(allProject)
 
     } catch (error) {

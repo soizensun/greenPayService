@@ -17,7 +17,8 @@ router.get('/getOrder/:shopId', ShopController.getOrder)
 
 router.get('/closeOrder/:orderId', ShopController.closeOrder)
 
-router.get('/MyProducts/:shopId', ShopController.MyProducts)
+router.get('/myProducts/:shopId', ShopController.myProducts)
 
+router.get('/myIncome/:shopId' , ShopController.myIncome)
 
 module.exports = router

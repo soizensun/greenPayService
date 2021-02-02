@@ -4,7 +4,7 @@ const Shop = require('../models/Shop');
 
 exports.getAll = async (req, res) => {
     try {
-        const all = await Product.find()
+        const all = await Product.find( {stock: {$ne: 0}} )
         return res.json(all)
     } catch (error) {
         res.status(500).json({ error: error.message })

@@ -1,6 +1,7 @@
 const Cart = require('../models/Cart');
 const Project = require('../models/Project')
 const Order = require('../models/Order')
+const Product = require('../models/Product')
 
 exports.getAll = async (req, res) => {
     try {
@@ -106,7 +107,6 @@ exports.addAProduct = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: error.message })
     }
-
 }
 
 

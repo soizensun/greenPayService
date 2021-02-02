@@ -5,7 +5,8 @@ const userShema = new mongoose.Schema({
     password: {type: String, required: true, minlength: 5},
     displayName: {type: String},
     role: {type: [String], default: ["shopper"]},
-    addressId: {type: String}
+    addressId: {type: String},
+    phoneNumber: {type: String, default: "-"}
 })
 
 module.exports = User = mongoose.model("user", userShema);

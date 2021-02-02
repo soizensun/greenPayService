@@ -6,7 +6,9 @@ const shopShema = new mongoose.Schema({
     tagId: {type: String, required: true},
     description: {type: String, required: true},
     logo: {type: String},
-    shipping: {type: [Object]}
+    shipping: {type: [Object]},
+    accountName: {type: String},
+    promptpayNumber: {type: String}
 })
 
 module.exports = Shop = mongoose.model("shop", shopShema); 

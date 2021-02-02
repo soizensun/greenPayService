@@ -1,7 +1,8 @@
 const Shop = require('../models/Shop')
 const Order = require('../models/Order')
 const Product = require('../models/Product')
-const e = require('express')
+const SellerMoneyHistory = require('../models/SellerMoneyHistory')
+// const e = require('express')
 
 exports.getAll = async (req, res) => {
     try {
@@ -54,7 +55,7 @@ exports.findById = async (req, res) => {
 
 exports.getOrder = async (req, res) => {
     try {
-        const orderList = await Order.find({ shopId: req.params.shopId })
+        const orderList = await Order.find({ shopId: req.params.shopId, isCloseOrder: false })
         res.json(orderList)
     } catch (error) {
         res.status(500).json({ error: error.message })
@@ -77,20 +78,31 @@ exports.closeOrder = async (req, res) => {
             }
         })
 
-        await Order.findByIdAndDelete(req.params.orderId)
+        await Order.findByIdAndUpdate(req.params.orderId, {isCloseOrder: true})
 
-        const orderList = await Order.find({ shopId: order.shopId })
+        const orderList = await Order.find({ shopId: order.shopId, isCloseOrder: false })
         res.json(orderList)
     } catch (error) {
         res.status(500).json({ error: error.message })
     }
 }
 
-exports.MyProducts = async (req, res) => {
+exports.myProducts = async (req, res) => {
     try {
         const productList = await Product.find({ shopId: req.params.shopId })
         res.json(productList.reverse())
     } catch (error) {
-        res.status(500).json({ error: error.message })        
+        res.status(500).json({ error: error.message })
     }
 }
+
+exports.myIncome = async (req, res) => {
+    try {
+        const sellerMoneyHistoryList = await SellerMoneyHistory.find({ shopId: req.params.shopId })
+        res.json(sellerMoneyHistoryList)
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+}
+
+

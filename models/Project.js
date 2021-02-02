@@ -8,7 +8,7 @@ const projectSchema = new mongoose.Schema({
     isWeeklyProject: {type: Boolean, default: false, required: true},
     budget: {type: Number, required: true},
     targetBudget: {type: Number, required: true},
-    creatdeAt: {type: Date, default: Date.now() , required: true},
+    creatdeAt: {type: Date, default: new Date() , required: true},
     status: {type: Boolean, default: true, required: true}
 })
 

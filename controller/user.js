@@ -249,7 +249,7 @@ exports.getAddress = async (req, res) => {
 
 exports.getShop = async (req, res) => {
     try {
-        const shop = await Shop.findOne({ ownerId: req.user })
+        const shop = await Shop.findOne({ ownerId: req.user, isActivate: true })
         res.json(shop)
     } catch (error) {
         res.status(500).json({ error: error.message })

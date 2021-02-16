@@ -4,7 +4,7 @@ const Shop = require('../models/Shop');
 
 exports.getAll = async (req, res) => {
     try {
-        const all = await Product.find( {stock: {$ne: 0}} )
+        const all = await Product.find({ stock: { $ne: 0 } })
         return res.json(all)
     } catch (error) {
         res.status(500).json({ error: error.message })
@@ -21,7 +21,7 @@ exports.register = async (req, res) => {
                 .json({ msg: "Not all fields have been entered." })
 
         const tmpProduct = await Product.findOne({ name, shopId })
-        
+
         if (tmpProduct) {
             if (tmpProduct.shopId == shopId)
                 return res
@@ -53,8 +53,8 @@ exports.updateProduct = async (req, res) => {
     try {
         let { _id, shopId, name, tagId, price, stock, description, mainPicture, morePicture, greenPrice } = req.body
 
-        let updatedProduct = await Product.updateOne({ _id }, 
-            { 
+        let updatedProduct = await Product.updateOne({ _id },
+            {
                 shopId,
                 name,
                 tagId,
@@ -65,7 +65,9 @@ exports.updateProduct = async (req, res) => {
                 morePicture,
                 greenPrice
             })
-        res.json(updatedProduct)
+
+        const productList = await Product.find({ shopId })
+        res.json(productList.reverse())
     } catch (error) {
         res.status(500).json({ error: error.massage })
     }

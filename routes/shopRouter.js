@@ -21,4 +21,8 @@ router.get('/myProducts/:shopId', ShopController.myProducts)
 
 router.get('/myIncome/:shopId' , ShopController.myIncome)
 
+router.post('/updateShop', ShopController.updateShop)
+
+router.delete('/clearIncomeHistory/:shopId', ShopController.clearIncomeHistory)
+
 module.exports = router

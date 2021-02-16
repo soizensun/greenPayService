@@ -21,3 +21,12 @@ exports.productTag = async (req, res) => {
         res.status(500).json({ error: error.message })
     }
 }
+
+exports.getById = async (req, res) => {
+    try {
+        const productTag = await ProductTag.findById(req.params.tagId)
+        return res.json(productTag)
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+}

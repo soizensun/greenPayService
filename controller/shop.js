@@ -15,9 +15,9 @@ exports.getAll = async (req, res) => {
 
 exports.register = async (req, res) => {
     try {
-        let { name, tagId, description, logo, ownerId, shipping } = req.body
+        let { name, tagId, description, logo, ownerId, shipping, totalMoney, promptpayNumber, accountName } = req.body
 
-        if (!name || !tagId || !description || !ownerId || !shipping)
+        if (!name || !tagId || !description || !ownerId || !shipping || !totalMoney || !promptpayNumber || !accountName)
             return res
                 .status(400)
                 .json({ msg: "Not all fields have been entered." })
@@ -28,13 +28,22 @@ exports.register = async (req, res) => {
                 .status(400)
                 .json({ msg: "Duplicate shop name." })
 
+        const shopDup = await Shop.findOne({ ownerId })
+        if (shopDup)
+            return res
+                .status(400)
+                .json({ msg: "Duplicate shop owner." })
+
         const newShop = new Shop({
             name,
             tagId,
             description,
             logo,
             ownerId,
-            shipping
+            shipping,
+            totalMoney,
+            promptpayNumber,
+            accountName
         });
         const savedShop = await newShop.save();
         res.json(savedShop);
@@ -66,19 +75,7 @@ exports.closeOrder = async (req, res) => {
     try {
         const order = await Order.findById(req.params.orderId)
 
-        order.products.map(async product => {
-            const productDetail = await Product.findById(product.productId)
-
-            if (product.amount <= productDetail.stock) {
-                const newProduct = await Product.update(
-                    { _id: productDetail._id },
-                    {
-                        $set: { stock: productDetail.stock - product.amount }
-                    })
-            }
-        })
-
-        await Order.findByIdAndUpdate(req.params.orderId, {isCloseOrder: true})
+        await Order.findByIdAndUpdate(req.params.orderId, { isCloseOrder: true })
 
         const orderList = await Order.find({ shopId: order.shopId, isCloseOrder: false })
         res.json(orderList)
@@ -105,4 +102,32 @@ exports.myIncome = async (req, res) => {
     }
 }
 
+exports.updateShop = async (req, res) => {
+    try {
+        let { _id, name, description, logo, accountName, promptpayNumber } = req.body
+
+        let updatedShop = await Shop.updateOne({ _id },
+            {
+                name,
+                description,
+                logo,
+                accountName,
+                promptpayNumber
+            })
+
+        res.json(updatedShop)
+    } catch (error) {
+        res.status(500).json({ error: error.massage })
+    }
+}
+
+exports.clearIncomeHistory = async (req, res) => {
+    try {
+        await SellerMoneyHistory.deleteMany({ shopId: req.params.shopId })
+        const sellerMoneyHistoryList = await SellerMoneyHistory.find({ shopId: req.params.shopId })
+        res.json(sellerMoneyHistoryList)
+    } catch (error) {
+        res.status(500).json({ error: error.massage })
+    }
+}
 

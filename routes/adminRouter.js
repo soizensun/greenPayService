@@ -12,4 +12,8 @@ router.post('/transferMoney', AdminController.transferMoney)
 
 router.get('/getOrderForTransfer/:shopId', AdminController.getOrderForTransfer)
 
+router.post('/confirmShop', AdminController.confirmShop)
+
+router.post('/deleteShop/:shopId', AdminController.deleteShop)
+
 module.exports = router

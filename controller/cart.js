@@ -145,6 +145,18 @@ exports.confirmCart = async (req, res) => {
             const savedOrder = await newOrder.save();
         })
 
+        userCart.product.map(async product => {
+            const productDetail = await Product.findById(product.productId)
+
+            if (product.amount <= productDetail.stock) {
+                const newProduct = await Product.update(
+                    { _id: productDetail._id },
+                    {
+                        $set: { stock: productDetail.stock - product.amount }
+                    })
+            }
+        })
+
         // delete cart
         const deletedCart = await Cart.findByIdAndDelete(userCart._id)
         res.json(deletedCart)

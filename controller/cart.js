@@ -117,6 +117,7 @@ exports.confirmCart = async (req, res) => {
 
         // add budget to project
         let project = await Project.findById(projectId)
+        
         let newBudget = budget + project.budget
 
         let updatedProject = await Project.updateOne({ _id: projectId }, { budget: newBudget })

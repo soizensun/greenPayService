@@ -2,7 +2,8 @@ const bcrypt = require("bcryptjs");
 const User = require('../models/User')
 const Address = require('../models/Address')
 const jwt = require('jsonwebtoken')
-const { OAuth2Client } = require('google-auth-library')
+const { OAuth2Client } = require('google-auth-library');
+const Shop = require("../models/Shop");
 
 const client = new OAuth2Client("1068628232562-qm0ssc22ls4ks62jcopg1frqbdau8jau.apps.googleusercontent.com")
 
@@ -133,8 +134,13 @@ exports.findById = async (req, res) => {
 }
 
 exports.loginUser = async (req, res) => {
-    const user = await User.findById(req.user)
-    res.json(user)
+    try {
+        const user = await User.findById(req.user)
+        res.json(user)
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+
 }
 
 exports.googleLogin = async (req, res) => {
@@ -236,6 +242,15 @@ exports.getAddress = async (req, res) => {
         const user = await User.findOne({ _id: req.user })
         const address = await Address.findById(user.addressId)
         res.json(address)
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+}
+
+exports.getShop = async (req, res) => {
+    try {
+        const shop = await Shop.findOne({ ownerId: req.user, isActivate: true })
+        res.json(shop)
     } catch (error) {
         res.status(500).json({ error: error.message })
     }

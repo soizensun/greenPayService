@@ -44,10 +44,73 @@ exports.weeklyProject = async (req, res) => {
 
 exports.getAll = async (req, res) => {
     try {
-        const allProject = await Project.find({ isWeeklyProject: false })
+        const allProject = await Project.find()
         return res.json(allProject)
 
     } catch (error) {
         res.status(500).json({ error: error.massage })
+    }
+}
+
+exports.updateProject = async (req, res) => {
+    try {
+        let { _id, name, location, mainPicture, description, budget, targetBudget } = req.body
+
+        let updateProject = await Project.updateOne({ _id },
+            {
+                name,
+                location,
+                budget,
+                targetBudget,
+                description,
+                mainPicture
+            })
+
+        const allProject = await Project.find()
+        return res.json(allProject)
+
+    } catch (error) {
+        res.status(500).json({ error: error.massage })
+    }
+
+}
+
+exports.deleteProject = async (req, res) => {
+    try {
+        const project = await Project.findByIdAndDelete(req.params.projectId)
+
+        const allProject = await Project.find()
+        return res.json(allProject)
+
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+}
+
+exports.setWeeklyProject = async (req, res) => {
+    try {
+
+        await Project.updateOne({ isWeeklyProject: true }, { isWeeklyProject: false })
+        await Project.updateOne({ _id: req.params.projectId }, { isWeeklyProject: true })
+
+        const allProject = await Project.find()
+        return res.json(allProject)
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+}
+
+exports.switchIsActivateStatus = async (req, res) => {
+    try {
+        const targetProject = await Project.findById(req.params.projectId)
+        const newStatus = !targetProject.isActivate
+
+        await Project.updateOne({ _id: req.params.projectId }, { isActivate: newStatus })
+
+        
+        const allProject = await Project.find()
+        return res.json(allProject)
+    } catch (error) {
+        res.status(500).json({ error: error.message })
     }
 }

@@ -15,5 +15,8 @@ router.get('/:userId', CartController.getOne)
 
 router.post('/addAProduct', auth, CartController.addAProduct)
 
+router.post('/confirmCart', auth, CartController.confirmCart)
+
+// router.post('/getOrder', CartController.getOrder)
 
 module.exports = router

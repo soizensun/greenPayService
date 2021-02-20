@@ -1,8 +1,6 @@
 const jwt = require('jsonwebtoken')
 
 const auth = (req, res, next) => {
-    
-
     try {
         const token = req.header('x-auth-token')
         if (!token)
@@ -20,7 +18,7 @@ const auth = (req, res, next) => {
         req.user = verified.id
         next()
     } catch (error) {
-        res.status(500).json({ error: err.message })
+        res.status(500).json({ error: error.message })
     }
 }
 

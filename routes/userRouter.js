@@ -28,4 +28,7 @@ router.post('/addAddress', auth,  UserController.addAddress)
 
 router.get('/getAddress', auth,  UserController.getAddress)
 
+router.get('/getShop', auth, UserController.getShop)
+
+
 module.exports = router

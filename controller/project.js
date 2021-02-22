@@ -114,3 +114,18 @@ exports.switchIsActivateStatus = async (req, res) => {
         res.status(500).json({ error: error.message })
     }
 }
+
+exports.switchIsCloseProject = async (req, res) => {
+    try {
+        const targetProject = await Project.findById(req.params.projectId)
+        const newStatus = !targetProject.isClose
+
+        await Project.updateOne({ _id: req.params.projectId }, { isClose: newStatus })
+
+        
+        const allProject = await Project.find()
+        return res.json(allProject)
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+}

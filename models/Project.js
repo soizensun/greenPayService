@@ -11,6 +11,7 @@ const projectSchema = new mongoose.Schema({
     creatdeAt: {type: Date, default: new Date() , required: true},
     status: {type: Boolean, default: true, required: true},
     isActivate: {type: Boolean, default: true, required: true},
+    isClose: {type: Boolean, default: false, required: true}
 })
 
 module.exports = Project = mongoose.model("project", projectSchema); 

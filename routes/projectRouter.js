@@ -22,4 +22,6 @@ router.post('/setWeeklyProject/:projectId', ProjectController.setWeeklyProject)
 
 router.post('/switchIsActivateStatus/:projectId', ProjectController.switchIsActivateStatus)
 
+router.post('/switchIsCloseProject/:projectId', ProjectController.switchIsCloseProject)
+
 module.exports = router
